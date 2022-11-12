@@ -1,4 +1,4 @@
-*Deberá implementarse la funcionalidad básica de una tienda de productos:
+*Deberá implementarse la funcionalidad básica de una tienda de productos:*
 
 - Se podrán almacenar productos (código, nombre, precio, categoría), vendedor (código, nombre, sueldo).
 
@@ -6,7 +6,7 @@
 
 - Se debe de poder calcular la comisión de ventas por cada vendedor, el cual se obtiene de un 5% de las ventas realizadas en el caso de vender hasta dos productos y un 10% al vender más de dos productos.
 
-*** Debe implementarse distintos tipos de buscadores de productos, por ejemplo el buscar por categoría.**
+Debe implementarse distintos tipos de buscadores de productos, por ejemplo el buscar por categoría.
 
 - La aplicación tendrá que implementar el manejo de excepciones correctamente.
 

@@ -1,7 +1,9 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,13 +24,11 @@ public class Tienda {
         this.listaVendedores = new ArrayList<>();
     }
 
-    public void registrarVenta(Producto p, Vendedor vendedor) {
-        try {
-            vendedor.setCantVentas();
-            vendedor.agregarProductosVendidos(p);
-        } catch (Exception e) {
-            System.out.println("Vendedor o producto, no puede ser Null!");
+    public void registrarVenta(Producto p, Vendedor vendedor) throws ExcepcionProducto {
+        if (p == null || vendedor == null) {
+            throw new ExcepcionProducto("Producto o vendedor no pueden ser null!");
         }
+        vendedor.agregarProductosVendidos(p);
     }
 
     public void almacenarProductos(Producto p) throws ExcepcionProducto {
@@ -39,7 +39,7 @@ public class Tienda {
 
     }
 
-    public void agregarVendedor(Vendedor v) throws ExcepcionVendedor{
+    public void agregarVendedor(Vendedor v) throws ExcepcionVendedor {
         if (v == null) {
             throw new ExcepcionVendedor("Vendedor no puede ser Null");
         }
@@ -47,51 +47,51 @@ public class Tienda {
     }
 
     // Filtros
-    public List<Producto> productosPorCategoria(String a) {
+    public List<Producto> productosPorCategoria(String nombreCategoria) {
         List<Producto> result = listaProductos.stream()
-                .filter(p -> p.getCategoria().toString().equals(a))
+                .filter(producto -> producto.getCategoria().getDescripcion().equals(nombreCategoria))
                 .collect(Collectors.toList());
         return result;
     }
 
-    public void productoPorCodigo(String codigo) {
-        try {
-            Optional<Producto> result = listaProductos.stream()
-                    .filter(c -> c.getCodigo().equals(codigo))
-                    .findAny();
-            System.out.println(result.orElseThrow());
-        } catch (Exception e) {
-            System.out.println("Revisar, algun producto quedo null: "+e.getMessage());
-        }
+    public Producto productoPorCodigo(String codigo) {
+        Optional<Producto> producto = listaProductos.stream()
+                .filter(p -> p.getCodigo().equals(codigo))
+                .findFirst();
+
+        return producto.isPresent() ? producto.get() : null;
     }
 
-    public List<Producto> producosConPrecioMayoresA(double precio) {
+    public List<Producto> productosConPrecioMayoresA(double precio) {
         List<Producto> result = listaProductos.stream()
                 .filter(p -> p.getPrecio() > precio)
                 .collect(Collectors.toList());
         return result;
     }
 
-    public void comisionDeVentasPorVendedor() {
+    // Comision por vendedor
+    // Devolver valor y mostrarlo en el main
+    public Map<String, Double> comisionDeVentasPorVendedor() {
         int cantTotal = 0;
+        Map<String, Double> mapaComisiones = new HashMap<>();
         int i = 0;
         while (i < this.listaVendedores.size()) {
-            cantTotal = this.listaVendedores.get(i).getCantVentas();
+            Vendedor vendedor = this.listaVendedores.get(i);
+            double comision = 0;
+            cantTotal = vendedor.getCantidadVentas();
             if (cantTotal > 0 && cantTotal <= CANTIDAD_MINIMA_COMISION) {
-                System.out.println("Comision del vendedor " + this.listaVendedores.get(i).getNombre() + " es: $"
-                        + this.listaVendedores.get(i).totalVendido() * PORC_COMISION_MINIMO);
+                comision = vendedor.totalVendido() * PORC_COMISION_MINIMO;
             } else if (cantTotal > CANTIDAD_MINIMA_COMISION) {
-                System.out.println("Comision del vendedor " + this.listaVendedores.get(i).getNombre() + " es: $"
-                        + this.listaVendedores.get(i).totalVendido() * PORC_COMISION_MAXIMO);
-            } else {
-                System.out.println("Comision del vendedor " + this.listaVendedores.get(i).getNombre() + " es: $0.00");
+                comision = vendedor.totalVendido() * PORC_COMISION_MAXIMO;
             }
+            mapaComisiones.put(vendedor.getNombre(), comision);
             i++;
         }
+        return mapaComisiones;
 
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////
+    // Validaciones
 
     public Producto crearProducto(String codigo, String nombre, double precio, Categoria categoria) {
         return new Producto(codigo, nombre, precio, categoria);
@@ -101,27 +101,11 @@ public class Tienda {
         return new Vendedor(codigo, nombre, suedo);
     }
 
-    public void mostrarProductosPorCategoria(Categoria c) {
-        if (c == null) {
-            throw new NullPointerException("Categoria no pueden ser null");
-        }
-        for (Producto p : this.productosPorCategoria(c.toString())) {
-            System.out.println(p.toString());
-        }
-    }
-
-    public void mostrarProductosPorCodigo(String c) throws ExcepcionProducto {
-        if (!c.isEmpty()) {
-            this.productoPorCodigo(c);
-        } else {
-            throw new ExcepcionProducto("Para poder filtrar por código debe ingresar un valor");
-        }
-    }
-
-    public void mostrarProducosConPrecioMayoresA(double precio) {
-        for (Producto p : this.producosConPrecioMayoresA(precio)) {
-            System.out.println(p.toString());
-        }
+    public Vendedor buscarVendedorPorCodigo(String codigo) {
+        Optional<Vendedor> vendedor = listaVendedores.stream()
+                .filter(v -> v.getCodigo().equals(codigo))
+                .findFirst();
+        return vendedor.orElse(null);
     }
 
 }

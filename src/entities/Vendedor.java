@@ -8,14 +8,14 @@ public class Vendedor {
     private String codigo;
     private String nombre;
     private double sueldo;
-    private int cantVentas;
+    private int cantidadVentas;
     private List<Producto> productosVendidos;
 
     public Vendedor(String codigo, String nombre, double sueldo) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.sueldo = sueldo;
-        this.cantVentas = 0;
+        this.cantidadVentas = 0;
         this.productosVendidos = new ArrayList<>();
     }
 
@@ -31,15 +31,16 @@ public class Vendedor {
         return sueldo;
     }
 
-    public int getCantVentas() {
-        return cantVentas;
+    public int getCantidadVentas() {
+        return cantidadVentas;
     }
 
-    public void setCantVentas() {
-        this.cantVentas++;
+    private void setCantidadVentas() {
+        this.cantidadVentas++;
     }
 
     public void agregarProductosVendidos(Producto p){
+        this.setCantidadVentas();
         this.productosVendidos.add(p);
     }
 
@@ -54,7 +55,7 @@ public class Vendedor {
     @Override
     public String toString() {
         return "Codigo: " + getCodigo() + " " + "Nombre: " + getNombre() + " " + "Sueldo: " + getSueldo() + " "
-                + "Cantidad de Ventas: " + getCantVentas();
+                + "Cantidad de Ventas: " + getCantidadVentas();
     }
 
 }

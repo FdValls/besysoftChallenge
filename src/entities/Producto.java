@@ -32,7 +32,7 @@ public class Producto {
 
     @Override
     public String toString() {
-        return "Codigo: " + getCodigo() + " " + "Nombre: " + getNombre() + " " + "Precio: " + getPrecio() + " "
+        return "Codigo: " + getCodigo() + " " + "Nombre: " + getNombre() + " " + "Precio: $" + getPrecio() + " "
                 + "Categoria: " + getCategoria();
     }
 

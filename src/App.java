@@ -101,12 +101,12 @@ public class App {
         System.out.println("Mostrar filtros - SI - NO");
         txtFiltros = txtEntrada.nextLine();
         while (!txtFiltros.toLowerCase().equals("no")) {
-            System.out.println("PRUEBA DE FILTRO POR CATEGORIA MUJER - INFANTL - HOMBRE: ");
+            System.out.print("Para filtrar por categoria escriba una opción: MUJER - INFANTL - HOMBRE: ");
             txtMostrarProductosPorCategoria = validarStringInput(txtEntrada.nextLine().toLowerCase());
             tienda.productosPorCategoria(txtMostrarProductosPorCategoria)
                     .forEach(producto -> System.out.println(producto));
 
-            System.out.println("PRUEBA DE FILTRO POR CODIGO: ");
+            System.out.print("Escriba el número de código que desea buscar: ");
             txtMostrarProductosPorCodigo = validarStringInput(txtEntrada.nextLine().toLowerCase());
             try {
                 System.out.println(tienda.productoPorCodigo(txtMostrarProductosPorCodigo).toString());
@@ -115,7 +115,7 @@ public class App {
                 System.out.println(e.getMessage());
             }
 
-            System.out.println("PRUEBA DE FILTRO POR PRECIO MAYO A: ");
+            System.out.println("Escriba un precio de referencia para buscar productos mayores a: ");
             txtMostrarProductosConPrecioMayoresA = validarDoubleEntrada(txtEntrada.nextLine().toLowerCase());
             tienda.productosConPrecioMayoresA(txtMostrarProductosConPrecioMayoresA)
                     .forEach(producto -> System.out.println(producto));
@@ -134,7 +134,7 @@ public class App {
             tienda.comisionDeVentasPorVendedor();
             for (Map.Entry<String, Double> e : tienda.comisionDeVentasPorVendedor().entrySet())
                 System.out.println(e.getKey() + " "
-                        + e.getValue());
+                        + "$" + e.getValue());
             txtMostrarComisionesPorVendedor = txtEntrada.nextLine();
 
             System.out.println("Desea volver al menu principal ? - SI - NO");

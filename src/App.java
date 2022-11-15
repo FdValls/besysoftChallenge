@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -11,136 +12,182 @@ public class App {
     public static Scanner txtEntrada = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
+        // Variables producto
         String txtSalirProducto = "";
         String txtCodigoProducto = "";
         String txtNombreProducto = "";
         double doublePrecioProducto = 0;
-        Tienda tienda = new Tienda();
-        Categoria categoria = null;
-
-        System.out.println("Agregar productos: ");
-        while (!txtSalirProducto.toLowerCase().equals("no")) {
-
-            // Valido los input STRING
-            System.out.print("Introduzca código del producto: ");
-            txtCodigoProducto = validarStringInput(txtEntrada.nextLine());
-            System.out.print("Introduzca el nombre del producto: ");
-            txtNombreProducto = validarStringInput(txtEntrada.nextLine());
-            System.out.print("Introduzca precio del producto: ");
-            // Valida el precio
-            doublePrecioProducto = validarDoubleEntrada(txtEntrada.nextLine());
-            System.out.print("Introduzca la categoria del producto MUJER - INFANTL - HOMBRE : ");
-            categoria = validarCategoria(txtEntrada.nextLine().toLowerCase());
-
-            tienda.almacenarProductos(
-                    new Producto(txtCodigoProducto, txtNombreProducto, doublePrecioProducto, categoria));
-
-            System.out.print("Desea continuar cargando productos - SI - NO: ");
-            txtSalirProducto = txtEntrada.nextLine().toLowerCase();
-
-        }
-
+        // Variables vendedor
         String txtSalirVendedor = "";
         String txtCodigoVendedor = "";
         String txtNombreVendedor = "";
         String txtSueldoVendedor = "";
         double doubleSueldoVendedor = 0;
-
-        System.out.println("Agregar vendedores: ");
-        while (!txtSalirVendedor.toLowerCase().equals("no")) {
-            System.out.print("Introduzca código del vendedor: ");
-            txtCodigoVendedor = validarStringInput(txtEntrada.nextLine());
-            System.out.print("Introduzca el nombre del vendedor: ");
-            txtNombreVendedor = validarStringInput(txtEntrada.nextLine());
-            System.out.print("Introduzca sueldo del vendedor: ");
-            txtSueldoVendedor = validarStringInput(txtEntrada.nextLine());
-            doubleSueldoVendedor = validarDoubleEntrada(txtSueldoVendedor);
-            tienda.agregarVendedor(new Vendedor(txtCodigoVendedor, txtNombreVendedor, doubleSueldoVendedor));
-
-            System.out.print("Desea continuar cargando vendedores - SI - NO: ");
-            txtSalirVendedor = txtEntrada.nextLine().toLowerCase();
-        }
-
+        // Variables filtro por categoria
+        String txtMostrarProductosPorCategoria = "";
+        String txtSalirFiltroCaterogia = "";
+        /// Variables filtro por código
+        String txtMostrarProductosPorCodigo = "";
+        // Variables filtro por precio mayor a:
+        String txtFiltroMAyorA = "";
+        double txtMostrarProductosConPrecioMayoresA = 0;
+        // Variables filtro por comision
+        String txtMostrarComisionesPorVendedor = "";
+        /////////////////////////////
+        // Variables registrar ventas
         String txtRegistrarVentas = "";
         String codigoProducto = "";
         String codigoPVendedor = "";
+        /////////////////////////////
+        Tienda tienda = new Tienda();
+        Categoria categoria = null;
+        boolean salir = false;
+        int opcion;
 
-        System.out.println("Registrar Ventas: ");
-        while (!txtRegistrarVentas.toLowerCase().equals("no")) {
-            System.out.println("Introduzca código del producto y codigo del vendedor: ");
-            codigoProducto = txtEntrada.nextLine();
-            codigoPVendedor = txtEntrada.nextLine();
+        while (!salir) {
+
+            System.out.println("1. Opcion 1 -> para crear productos: ");
+            System.out.println("2. Opcion 2 -> para crear vendedores: ");
+            System.out.println("3. Opcion 3 -> para registrar ventas: ");
+            System.out.println("4. Opcion 4 -> para filtrar por categoria: ");
+            System.out.println("5. Opcion 5 -> para filtrar por codigo: ");
+            System.out.println("6. Opcion 6 -> para filtrar por productos mayores a (precio): ");
+            System.out.println("7. Opcion 7 -> para mostrar comisiones por vendedor: ");
+            System.out.println("8. Salir");
+
             try {
 
-                if (tienda.productoPorCodigo(codigoProducto) == null) {
-                    throw new ExcepcionProducto("Codigo producto inexsitente");
+                System.out.print("Escribe una de las opciones: ");
+                opcion = txtEntrada.nextInt();
+                txtEntrada.nextLine();
+
+                switch (opcion) {
+                    case 1:
+                        while (!txtSalirProducto.toLowerCase().equals("no")) {
+                            System.out.print("Introduzca código del producto: ");
+                            txtCodigoProducto = txtEntrada.nextLine().toLowerCase();
+                            validarStringInput(txtCodigoProducto);
+                            System.out.print("Introduzca el nombre del producto: ");
+                            txtNombreProducto = validarStringInput(txtEntrada.nextLine());
+                            System.out.print("Introduzca precio del producto: ");
+                            doublePrecioProducto = validarDoubleEntrada(txtEntrada.nextLine());
+                            System.out.print("Introduzca la categoria del producto MUJER - INFANTL - HOMBRE : ");
+                            categoria = validarCategoria(txtEntrada.nextLine().toLowerCase());
+                            tienda.almacenarProductos(
+                                    new Producto(txtCodigoProducto, txtNombreProducto, doublePrecioProducto,
+                                            categoria));
+
+                            System.out.print("Desea continuar cargando productos - SI - NO: ");
+                            txtSalirProducto = txtEntrada.nextLine().toLowerCase();
+                        }
+                        break;
+                    case 2:
+
+                        System.out.println("Agregar vendedores: ");
+                        while (!txtSalirVendedor.toLowerCase().equals("no")) {
+                            System.out.print("Introduzca código del vendedor: ");
+                            txtCodigoVendedor = validarStringInput(txtEntrada.nextLine());
+                            System.out.print("Introduzca el nombre del vendedor: ");
+                            txtNombreVendedor = validarStringInput(txtEntrada.nextLine());
+                            System.out.print("Introduzca sueldo del vendedor: ");
+                            txtSueldoVendedor = validarStringInput(txtEntrada.nextLine());
+                            doubleSueldoVendedor = validarDoubleEntrada(txtSueldoVendedor);
+                            tienda.agregarVendedor(
+                                    new Vendedor(txtCodigoVendedor, txtNombreVendedor, doubleSueldoVendedor));
+
+                            System.out.print("Desea continuar cargando vendedores - SI - NO: ");
+                            txtSalirVendedor = txtEntrada.nextLine().toLowerCase();
+                        }
+                        break;
+                    case 3:
+                        while (!txtRegistrarVentas.toLowerCase().equals("no")) {
+                            System.out.println("Introduzca código del producto y codigo del vendedor: ");
+                            codigoProducto = txtEntrada.nextLine();
+                            codigoPVendedor = txtEntrada.nextLine();
+                            try {
+                                tienda.registrarVenta(tienda.productoPorCodigo(codigoProducto),
+                                        tienda.buscarVendedorPorCodigo(codigoPVendedor));
+                            } catch (ExcepcionProducto e) {
+                                System.out.println(e.getMessage());
+                            }
+                            System.out.println("Desea seguir registrando ventas? - SI - NO");
+                            txtRegistrarVentas = txtEntrada.nextLine().toLowerCase();
+                        }
+                        break;
+                    case 4:
+                        while (!txtSalirFiltroCaterogia.toLowerCase().equals("no")) {
+                            System.out
+                                    .print("Para filtrar por categoria escriba una opción: MUJER - INFANTL - HOMBRE: ");
+                            txtMostrarProductosPorCategoria = validarStringInput(txtEntrada.nextLine().toLowerCase());
+                            if (tienda.productosPorCategoria(txtMostrarProductosPorCategoria).isEmpty()) {
+                                System.out.println("No hay elementos para esa categoría");
+                            } else {
+                                tienda.productosPorCategoria(txtMostrarProductosPorCategoria)
+                                        .forEach(producto -> System.out.println(producto));
+                            }
+                            System.out
+                                    .print("Volver a ver filtro por categoria o volver al menú principal? - SI - NO: ");
+                            txtSalirFiltroCaterogia = txtEntrada.nextLine().toLowerCase();
+                        }
+                        break;
+                    case 5:
+                        while (!txtMostrarProductosPorCodigo.toLowerCase().equals("no")) {
+                            System.out.print("Escriba el número de código que desea buscar: ");
+                            txtMostrarProductosPorCodigo = validarStringInput(txtEntrada.nextLine().toLowerCase());
+                            try {
+                                System.out.println(tienda.productoPorCodigo(txtMostrarProductosPorCodigo).toString());
+
+                            } catch (Exception e) {
+                                System.out.println("El codigo de producto no existe");
+                            }
+                            System.out
+                                    .print("Volver a ver filtro por código o volver al menú principal? - SI - NO: ");
+                            txtMostrarProductosPorCodigo = validarStringInput(txtEntrada.nextLine().toLowerCase());
+                        }
+                        break;
+                    case 6:
+                        while (!txtFiltroMAyorA.equals("no")) {
+                            System.out.print("Escriba un precio de referencia para buscar productos mayores a: ");
+                            txtMostrarProductosConPrecioMayoresA = validarDoubleEntrada(
+                                    txtEntrada.nextLine().toLowerCase());
+
+                            if (tienda.productosConPrecioMayoresA(txtMostrarProductosConPrecioMayoresA).isEmpty()) {
+                                System.out.println("No hay elementos en la lista");
+                            } else {
+                                tienda.productosConPrecioMayoresA(txtMostrarProductosConPrecioMayoresA)
+                                        .forEach(producto -> System.out.println(producto));
+                            }
+                            System.out.println("Desea seguir filtrando productos ? - SI - NO");
+                            txtFiltroMAyorA = txtEntrada.nextLine().toLowerCase();
+                        }
+                        break;
+                    case 7:
+                        while (!txtMostrarComisionesPorVendedor.equals("no")) {
+
+                            if (tienda.comisionDeVentasPorVendedor().size() == 0) {
+                                System.out.println("Ningun vendedor obtuvo comision");
+                            } else {
+                                tienda.comisionDeVentasPorVendedor();
+                                for (Map.Entry<String, Double> e : tienda.comisionDeVentasPorVendedor().entrySet())
+                                    System.out.println("Vendedor " + e.getKey() + " "
+                                            + "comision de: $" + e.getValue());
+                            }
+
+                            System.out.println("Volver a ver las comisiones o volver al menu principal ? - SI - NO");
+                            txtMostrarComisionesPorVendedor = txtEntrada.nextLine().toLowerCase();
+                        }
+                        break;
+                    case 8:
+                        salir = true;
+                        break;
+                    default:
+                        System.out.println("Solo números entre 1 y 4");
                 }
-                if (tienda.buscarVendedorPorCodigo(codigoPVendedor) == null) {
-                    throw new ExcepcionProducto("Codigo vendedor inexsitente");
-                }
-            } catch (ExcepcionProducto e) {
-                System.out.println(e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("Debes insertar un número");
+                txtEntrada.next();
             }
-            try {
-                tienda.registrarVenta(tienda.productoPorCodigo(codigoProducto),
-                        tienda.buscarVendedorPorCodigo(codigoPVendedor));
-            } catch (ExcepcionProducto e) {
-                System.out.println(e.getMessage());
-            }
-
-            System.out.println("Desea seguir registrando ventas? - SI - NO");
-            txtRegistrarVentas = txtEntrada.nextLine().toLowerCase();
         }
-
-        String txtFiltros = "";
-        String txtMostrarProductosPorCategoria = "";
-        String txtMostrarProductosPorCodigo = "";
-        double txtMostrarProductosConPrecioMayoresA = 0;
-
-        // Filtros
-        System.out.println("Mostrar filtros - SI - NO");
-        txtFiltros = txtEntrada.nextLine();
-        while (!txtFiltros.toLowerCase().equals("no")) {
-            System.out.print("Para filtrar por categoria escriba una opción: MUJER - INFANTL - HOMBRE: ");
-            txtMostrarProductosPorCategoria = validarStringInput(txtEntrada.nextLine().toLowerCase());
-            tienda.productosPorCategoria(txtMostrarProductosPorCategoria)
-                    .forEach(producto -> System.out.println(producto));
-
-            System.out.print("Escriba el número de código que desea buscar: ");
-            txtMostrarProductosPorCodigo = validarStringInput(txtEntrada.nextLine().toLowerCase());
-            try {
-                System.out.println(tienda.productoPorCodigo(txtMostrarProductosPorCodigo).toString());
-
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-
-            System.out.println("Escriba un precio de referencia para buscar productos mayores a: ");
-            txtMostrarProductosConPrecioMayoresA = validarDoubleEntrada(txtEntrada.nextLine().toLowerCase());
-            tienda.productosConPrecioMayoresA(txtMostrarProductosConPrecioMayoresA)
-                    .forEach(producto -> System.out.println(producto));
-
-            System.out.println("Desea seguir filtrando productos ? - SI - NO");
-            txtFiltros = txtEntrada.nextLine().toLowerCase();
-
-        }
-
-        String txtMostrarComisionesPorVendedor = "";
-
-        System.out.println("Mostrar comision por vendedores? - SI - NO");
-        txtMostrarComisionesPorVendedor = txtEntrada.nextLine();
-        while (!txtMostrarComisionesPorVendedor.equals("no")) {
-
-            tienda.comisionDeVentasPorVendedor();
-            for (Map.Entry<String, Double> e : tienda.comisionDeVentasPorVendedor().entrySet())
-                System.out.println(e.getKey() + " "
-                        + "$" + e.getValue());
-            txtMostrarComisionesPorVendedor = txtEntrada.nextLine();
-
-            System.out.println("Desea volver al menu principal ? - SI - NO");
-            txtFiltros = txtEntrada.nextLine().toLowerCase();
-        }
-
     }
 
     private static Categoria validarCategoria(String txtCategoriaProducto) {
@@ -174,10 +221,10 @@ public class App {
         while (!esPrecioValido) {
             try {
                 precioInicial = Double.parseDouble(precio);
-                if ((precio.matches("^-?\\d+(?:.\\d+)?$") && precioInicial >= 0)) {
+                if ((precio.matches("^-?\\d+(?:.\\d+)?$") && precioInicial > 0)) {
                     esPrecioValido = true;
                 } else {
-                    System.out.print("Introducí un valor numerico distinto de 0: ");
+                    System.out.print("Introducí un valor numerico distinto y mayor a 0: ");
                     precio = txtEntrada.nextLine();
                 }
             } catch (Exception e) {

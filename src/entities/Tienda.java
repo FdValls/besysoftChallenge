@@ -69,8 +69,6 @@ public class Tienda {
         return result;
     }
 
-    // Comision por vendedor
-    // Devolver valor y mostrarlo en el main
     public Map<String, Double> comisionDeVentasPorVendedor() {
         int cantTotal = 0;
         Map<String, Double> mapaComisiones = new HashMap<>();
@@ -90,8 +88,6 @@ public class Tienda {
         return mapaComisiones;
 
     }
-
-    // Validaciones
 
     public Producto crearProducto(String codigo, String nombre, double precio, Categoria categoria) {
         return new Producto(codigo, nombre, precio, categoria);

@@ -24,9 +24,12 @@ public class Tienda {
         this.listaVendedores = new ArrayList<>();
     }
 
-    public void registrarVenta(Producto p, Vendedor vendedor) throws ExcepcionProducto {
-        if (p == null || vendedor == null) {
-            throw new ExcepcionProducto("Producto o vendedor no pueden ser null!");
+    public void registrarVenta(Producto p, Vendedor vendedor) throws Exception {
+        if (p == null) {
+            throw new ExcepcionProducto("Producto no puede ser null!");
+        }
+        if (vendedor == null) {
+            throw new ExcepcionVendedor("Vendedor no puede ser null!");
         }
         vendedor.agregarProductosVendidos(p);
     }

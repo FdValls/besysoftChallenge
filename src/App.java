@@ -6,7 +6,6 @@ import entities.Categoria;
 import entities.Producto;
 import entities.Tienda;
 import entities.Vendedor;
-import exception.ExcepcionProducto;
 
 public class App {
     public static Scanner txtEntrada = new Scanner(System.in);
@@ -41,6 +40,8 @@ public class App {
         /////////////////////////////
         Tienda tienda = new Tienda();
         Categoria categoria = null;
+        Producto producto;
+        Vendedor vendedor;
         boolean salir = false;
         int opcion;
 
@@ -98,21 +99,26 @@ public class App {
                             System.out.print("Desea continuar cargando vendedores - SI - NO: ");
                             txtSalirVendedor = txtEntrada.nextLine().toLowerCase();
                         }
+                        txtSalirVendedor = "";
                         break;
                     case 3:
+
                         while (!txtRegistrarVentas.toLowerCase().equals("no")) {
                             System.out.println("Introduzca código del producto y codigo del vendedor: ");
                             codigoProducto = txtEntrada.nextLine();
                             codigoPVendedor = txtEntrada.nextLine();
+                            producto = tienda.productoPorCodigo(codigoProducto);
+                            vendedor = tienda.buscarVendedorPorCodigo(codigoPVendedor);
+
                             try {
-                                tienda.registrarVenta(tienda.productoPorCodigo(codigoProducto),
-                                        tienda.buscarVendedorPorCodigo(codigoPVendedor));
-                            } catch (ExcepcionProducto e) {
+                                tienda.registrarVenta(producto, vendedor);
+                            } catch (Exception e) {
                                 System.out.println(e.getMessage());
                             }
                             System.out.println("Desea seguir registrando ventas? - SI - NO");
                             txtRegistrarVentas = txtEntrada.nextLine().toLowerCase();
                         }
+                        txtRegistrarVentas = "";
                         break;
                     case 4:
                         while (!txtSalirFiltroCaterogia.toLowerCase().equals("no")) {
@@ -123,27 +129,28 @@ public class App {
                                 System.out.println("No hay elementos para esa categoría");
                             } else {
                                 tienda.productosPorCategoria(txtMostrarProductosPorCategoria)
-                                        .forEach(producto -> System.out.println(producto));
+                                        .forEach(p -> System.out.println(p));
                             }
                             System.out
                                     .print("Volver a ver filtro por categoria o volver al menú principal? - SI - NO: ");
                             txtSalirFiltroCaterogia = txtEntrada.nextLine().toLowerCase();
                         }
+                        txtSalirFiltroCaterogia = "";
                         break;
                     case 5:
                         while (!txtMostrarProductosPorCodigo.toLowerCase().equals("no")) {
                             System.out.print("Escriba el número de código que desea buscar: ");
                             txtMostrarProductosPorCodigo = validarStringInput(txtEntrada.nextLine().toLowerCase());
-                            try {
-                                System.out.println(tienda.productoPorCodigo(txtMostrarProductosPorCodigo).toString());
-
-                            } catch (Exception e) {
+                            if (tienda.productoPorCodigo(txtMostrarProductosPorCodigo) == null) {
                                 System.out.println("El codigo de producto no existe");
+                            } else {
+                                System.out.println(tienda.productoPorCodigo(txtMostrarProductosPorCodigo).toString());
                             }
                             System.out
                                     .print("Volver a ver filtro por código o volver al menú principal? - SI - NO: ");
                             txtMostrarProductosPorCodigo = validarStringInput(txtEntrada.nextLine().toLowerCase());
                         }
+                        txtMostrarProductosPorCodigo = "";
                         break;
                     case 6:
                         while (!txtFiltroMAyorA.equals("no")) {
@@ -152,14 +159,15 @@ public class App {
                                     txtEntrada.nextLine().toLowerCase());
 
                             if (tienda.productosConPrecioMayoresA(txtMostrarProductosConPrecioMayoresA).isEmpty()) {
-                                System.out.println("No hay elementos en la lista");
+                                System.out.println("No hay elementos en la lista mayores a ese precio");
                             } else {
                                 tienda.productosConPrecioMayoresA(txtMostrarProductosConPrecioMayoresA)
-                                        .forEach(producto -> System.out.println(producto));
+                                        .forEach(p -> System.out.println(p));
                             }
                             System.out.println("Desea seguir filtrando productos ? - SI - NO");
                             txtFiltroMAyorA = txtEntrada.nextLine().toLowerCase();
                         }
+                        txtFiltroMAyorA = "";
                         break;
                     case 7:
                         while (!txtMostrarComisionesPorVendedor.equals("no")) {
@@ -176,6 +184,7 @@ public class App {
                             System.out.println("Volver a ver las comisiones o volver al menu principal ? - SI - NO");
                             txtMostrarComisionesPorVendedor = txtEntrada.nextLine().toLowerCase();
                         }
+                        txtMostrarComisionesPorVendedor = "";
                         break;
                     case 8:
                         salir = true;
@@ -238,7 +247,7 @@ public class App {
     }
 
     private static String validarStringInput(String input) {
-        while (input.isEmpty() || input.isBlank()) {
+        while ((input.isEmpty() || input.isBlank())) {
             System.out.print("Debe ingresar un valor no vacío: ");
             input = txtEntrada.nextLine().toLowerCase();
         }

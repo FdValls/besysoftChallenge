@@ -181,7 +181,7 @@ public class App {
                         salir = true;
                         break;
                     default:
-                        System.out.println("Solo números entre 1 y 4");
+                        System.out.println("Solo números entre 1 y 8");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Debes insertar un número");
